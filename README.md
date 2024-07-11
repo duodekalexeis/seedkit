@@ -1,7 +1,7 @@
 Seedkit
 =======
 
-[![MIT License](https://img.shields.io/github/license/duodekalexeis/go-slip39.svg?maxAge=2592000&color=blue)](https://github.com/duodekalexeis/go-slip39/blob/master/LICENCE)
+[![MIT License](https://img.shields.io/github/license/duodekalexeis/seedkit.svg?maxAge=2592000&color=blue)](https://github.com/duodekalexeis/seedkit/blob/master/LICENCE)
 [![Go Build Status](https://github.com/duodekalexeis/seedkit/actions/workflows/go.yml/badge.svg)](https://github.com/duodekalexeis/seedkit/actions/workflows/go.yml/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/duodekalexeis/seedkit)](https://goreportcard.com/report/github.com/duodekalexeis/seedkit)
 
