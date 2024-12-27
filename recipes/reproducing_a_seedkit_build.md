@@ -57,7 +57,7 @@ later on your secure system is identical.
 
 ```bash
 # Set VTAG and TAG variables for the seedkit release you want to reproduce
-VTAG=v0.3.1
+VTAG=v0.3.3
 TAG=${VTAG#v}
 
 # Clone the seedkit repository for that tag
