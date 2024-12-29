@@ -100,9 +100,26 @@ means that you have one or more transcription errors in your shares,
 which need to be corrected (most importantly, on the version you have
 recorded on paper or metal).
 
+Similarly, you can confirm that the first or last M of your shares can be
+combined to produce your BIP-39 seed:
+
+```bash
+cat bip39.txt
+M=2  # set to the first number of you rMofN string e.g. 2of4
+# The following should produce the bip39 seed from the cat
+head -n $M slip39.txt | ~/Persistent/seedkit sb
+tail -n $M slip39.txt | ~/Persistent/seedkit sb
+```
 
 ## 6. Store your SLIP-39 shares securely
 
 Finally, store your SLIP-39 shares in separate secure locations.
 
 **NEVER** store a quorum of shares from the same group in the same location.
+
+
+## 7. Cleanup
+
+When you are finished, shut down your computer and remove the Tails USB stick
+which will discard all traces of your session.
+
