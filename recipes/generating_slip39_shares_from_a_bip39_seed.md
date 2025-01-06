@@ -101,11 +101,11 @@ which need to be corrected (most importantly, on the version you have
 recorded on paper or metal).
 
 Similarly, you can confirm that the first or last M of your shares can be
-combined to produce your BIP-39 seed:
+combined to restore your BIP-39 seed:
 
 ```bash
-cat bip39.txt
 M=2  # set to the first number of you rMofN string e.g. 2of4
+cat bip39.txt
 # The following should produce the bip39 seed from the cat
 head -n $M slip39.txt | ~/Persistent/seedkit sb
 tail -n $M slip39.txt | ~/Persistent/seedkit sb
