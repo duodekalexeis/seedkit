@@ -229,6 +229,68 @@ func TestBipValidate_Failure(t *testing.T) {
 	}
 }
 
+// Test validating random BIP-39 mnemonics
+func TestBipValidate_Random(t *testing.T) {
+	t.Parallel()
+
+	wordlen := []int{12, 15, 18, 21, 24}
+	randomCount := 200
+
+	for _, n := range wordlen {
+		for _ = range randomCount {
+			// Generate a random BIP-39 mnemonic
+			cmd := BipRandomCmd{
+				Num: n,
+			}
+			var buf bytes.Buffer
+			ctx := Context{
+				writer:  &buf,
+				verbose: 0,
+			}
+			err := cmd.Run(&ctx)
+			if err != nil {
+				t.Errorf("generating random BIP-39 mnemonic generated error: %s",
+					err.Error())
+				continue
+			}
+			mnemonic := buf.String()
+			//t.Logf("n: %d, mnemonic: %s", n, mnemonic)
+
+			// Validate mnemonic
+			for _, quiet := range []bool{true, false} {
+				cmd := BipValCmd{
+					Quiet: quiet,
+					Seed:  strings.Fields(strings.TrimSpace(mnemonic)),
+				}
+				var buf bytes.Buffer
+				ctx := Context{
+					writer:  &buf,
+					verbose: 0,
+				}
+
+				err := cmd.Run(&ctx)
+				if err != nil {
+					t.Errorf("mnemonic %q (%d) reported as invalid",
+						mnemonic, n)
+				}
+
+				got := buf.String()
+				if quiet {
+					if got != "" {
+						t.Errorf("mnemonic %q (%d) returned output in quiet mode: %s",
+							mnemonic, n, got)
+					}
+					continue
+				}
+				if !strings.Contains(got, "good") {
+					t.Errorf("mnemonic %q (%d) returned no error but outputs invalid",
+						mnemonic, n)
+				}
+			}
+		}
+	}
+}
+
 // Test round-tripping between BIP-39 mnemonics and SLIP-39 shares
 func TestBipSlip(t *testing.T) {
 	t.Parallel()
