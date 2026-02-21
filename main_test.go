@@ -632,7 +632,7 @@ func TestSlipLabel_Failure(t *testing.T) {
 
 		err = cmd.Run(&ctx)
 		if err == nil {
-			t.Errorf("LabelSlip on %q unexpectedly suceeded!", tf)
+			t.Errorf("LabelSlip on %q unexpectedly succeeded!", tf)
 			continue
 		}
 
