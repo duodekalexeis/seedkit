@@ -237,7 +237,7 @@ func TestBipValidate_Random(t *testing.T) {
 	randomCount := 200
 
 	for _, n := range wordlen {
-		for _ = range randomCount {
+		for range randomCount {
 			// Generate a random BIP-39 mnemonic
 			cmd := BipRandomCmd{
 				Num: n,
