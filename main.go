@@ -18,8 +18,8 @@ import (
 	"strings"
 
 	"github.com/alecthomas/kong"
-	"github.com/fatih/color"
 	"github.com/duodekalexeis/go-slip39"
+	"github.com/fatih/color"
 	"github.com/lmittmann/tint"
 	"github.com/tyler-smith/go-bip39"
 )
