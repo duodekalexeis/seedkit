@@ -34,9 +34,17 @@ release:
 
 signs:
   - artifacts: checksum
+    args:
+      - "--batch"
+      - "--local-user"
+      - "duodekalexeis@gmail.com"
+      - "--output"
+      - "${signature}"
+      - "--detach-sign"
+      - "${artifact}"
 
 archives:
-  - format: tar.gz
+  - formats: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
       {{ .ProjectName }}_
@@ -48,5 +56,5 @@ archives:
     # use zip for windows archives
     format_overrides:
       - goos: windows
-        format: zip
+        formats: zip
 
