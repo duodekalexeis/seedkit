@@ -32,16 +32,16 @@ release:
     owner: duodekalexeis
     name: seedkit
 
-signs:
-  - artifacts: checksum
-    args:
-      - "--batch"
-      - "--local-user"
-      - "duodekalexeis@gmail.com"
-      - "--output"
-      - "${signature}"
-      - "--detach-sign"
-      - "${artifact}"
+#signs:
+#  - artifacts: checksum
+#    args:
+#      - "--batch"
+#      - "--local-user"
+#      - "duodekalexeis@gmail.com"
+#      - "--output"
+#      - "${signature}"
+#      - "--detach-sign"
+#      - "${artifact}"
 
 archives:
   - formats: tar.gz
