@@ -20,11 +20,12 @@ later on your secure system is identical.
 ## Dependencies
 
 * Go: seedkit is written in Go, and a reproducible build requires the
-  same version of Go as was used for the build, which is currently
-  Go 1.22 (try `go version` to see if you have one already installed).
+  same version of Go as was used for the build, which should be the
+  latest stable release, currently Go 1.26.0 (try `go version` to see
+  if you have one already installed).
 
-  If not, install the latest release of that version (e.g. 1.22.5,
-  using the [official Go installation instructions](https://golang.org/doc/install).
+  If not, install the latest stable release of Go using the
+  [official Go installation instructions](https://golang.org/doc/install).
 
 
 * Goreleaser - seedkit uses [goreleaser](https://goreleaser.com) to
@@ -47,42 +48,87 @@ later on your secure system is identical.
 ## Procedure
 
 * Check [the latest seedkit release](https://github.com/duodekalexeis/seedkit/releases/latest)
-  in your browser and download the tar (or zip) file you are wanting to
-  verify against. If you are wanting to verify a binary for use on Tails,
-  you will want the Linux tar file that matches the architecture of the
-  machine you will be using (probably x86_64 unless you're on a Mac or
-  Raspberry Pi - check with `uname -m`).
+  to get the tag version (a string like `vX.Y.X`).
 
 * Then in a shell environment, do:
 
 ```bash
-# Set VTAG and TAG variables for the seedkit release you want to reproduce
-VTAG=v0.3.3
-TAG=${VTAG#v}
+# e.g.
+cd /tmp
 
-# Clone the seedkit repository for that tag
+# Set VTAG and TAG variables for the seedkit release you want to reproduce
+VTAG=v0.3.9
+TAG=${VTAG#v}
+echo -e "$VTAG\n$TAG"
+
+# Set an OS_ARCH variable for the OS+architecture combination you are wanting to check.
+# The architecture will be x86_64 or arm64 - check with `uname -m` if you're not sure.
+# But note that if your tails machine uses a different architecture you should use that
+# (or verify both architectures, for completeness).
+# Then download the release tarball/zipfile for the tag and your OS_ARCH e.g.
+OS_ARCH=Linux_x86_64
+OS_ARCH=Darwin_amd64
+OS_ARCH=Windows_x86_64
+# Set $SUFFIX appropriately
+if [ ${OS_ARCH%_*} == Windows ]; then
+  SUFFIX=zip
+else
+  SUFFIX=tar.gz
+fi
+echo seedkit_${OS_ARCH}.$SUFFIX
+# Download the release archive and the release checksums
+curl -L -o seedkit_${OS_ARCH}.$SUFFIX \
+  https://github.com/duodekalexeis/seedkit/releases/download/$VTAG/seedkit_${OS_ARCH}.$SUFFIX
+ls -l seedkit_${OS_ARCH}.$SUFFIX
+# Check the checksum of your archive against the release checksums
+sha256sum seedkit_${OS_ARCH}.$SUFFIX
+curl -L https://github.com/duodekalexeis/seedkit/releases/download/$VTAG/seedkit_${TAG}_checksums.txt
+
+# Assuming these match, you can now extract the binary from the release archive
+mkdir seedkit_release_$TAG
+cd seedkit_release_$TAG
+# For tarballs:
+tar zxvf ../seedkit_${OS_ARCH}.$SUFFIX
+# For zip files:
+unzip ../seedkit_${OS_ARCH}.$SUFFIX
+ls -l seedkit
+
+# Now clone the seedkit repository for your tag
+cd ..
 git clone --depth 1 --branch $VTAG https://github.com/duodekalexeis/seedkit
 # (ignore the warnings about being in `detached HEAD` state)
 
 # Change to the seedkit directory
 cd seedkit
 
-# Use goreleaser to do a local build
+# And use goreleaser to do a local build
 goreleaser --skip=publish,sign --clean
 
-# Calculate the sha256 checksum of the Linux tarfiles
-sha256sum dist/seedkit_Linux_x86_64.tar.gz
-sha256sum dist/seedkit_Linux_arm64.tar.gz
+# Note that we cannot verify the checksums on the tarballs/zipfiles you have just built,
+# as they will differ because of the local build metadata e.g. your build user, timestamps,
+# umask-affected permissions, etc.
+# Instead, we need to verify the checksums of the binaries *within* the archives.
+
+# Extract the newly built binary
+# For tarballs:
+tar zxvf dist/seedkit_${OS_ARCH}.$SUFFIX
+# For zip files:
+unzip dist../seedkit_${OS_ARCH}.$SUFFIX
+ls -l seedkit
+
+# And now compare the checksums of your newly build binary and the release version
+sha256sum seedkit
+sha256sum ../seedkit_release_$TAG/seedkit
 ```
 
-* Verify the checksums against the ones from the corresponding seedkit
-  release page. If they match, you have verified that those tar files
-  have been built from the source code you cloned, and that reviews of
-  that source code are trustworthy for the binaries in those tar files.
+* If these match, you have verified that the release binary was built from the
+  source code you cloned, and that reviews of that source code are valid for the
+  binary you have verified.
 
 
-* If you are using Tails, you can now download the tar file you verified
-  from the seedkit releases page and set it up for use on Tails (or put
-  the tar file you built on a webserver somewhere where Tails can access
-  it).
+* If you are using Tails, you can now use either the binary you have just built
+  or the release binary you have verified on your Tails machine, and be confident
+  at least that it matches the source code you have cloned. See the
+  [installing seedkit on tails](https://github.com/duodekalexeis/seedkit/blob/main/recipes/installing_seedkit_on_tails.md)
+  recipe for details on installing on Tails.
 
