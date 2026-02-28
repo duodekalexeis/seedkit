@@ -48,3 +48,16 @@ cat bip39.txt | ~/Persistent/seedkit bv
 ```
 
 
+## 5. Use your mnemonic seed
+
+Your BIP39 Mnemonic Seed is now ready for use. If you're loading it into a
+hardware wallet, now is the time to do that using the Enter Recovery Phrase
+function (or similar) on your hardware wallet.
+
+If it would be helpful to see your BIP39 word list in numbered format, you
+can use:
+
+```bash
+cat bip39.txt | ~/Persistent/seedkit bl
+```
+
