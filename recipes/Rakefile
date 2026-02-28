@@ -1,0 +1,10 @@
+
+MD_FILES = FileList['*.md']
+PDF_FILES = MD_FILES.ext('.pdf')
+
+task :default => PDF_FILES
+
+rule '.pdf' => ->(f){ f.sub('.pdf', '.md') } do |t|
+  sh "pandoc #{t.source} -o #{t.name} -V 'geometry:margin=2.5cm,top=2cm'"
+end
+
